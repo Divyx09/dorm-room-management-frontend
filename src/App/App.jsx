@@ -10,6 +10,7 @@ import SignupPage from "../pages/Auth/Signup";
 import ForgotPasswordPage from "../pages/Auth/ForgotPage";
 import AboutPage from "../pages/About/AboutPage";
 import TaskDashboard from "../pages/Tasks/TaskDashBoard";
+import MaintenanceDashboard from "../pages/Maintainance/MaintaiananceDashBoard";
 
 const router = createBrowserRouter([
   {
@@ -43,10 +44,13 @@ const router = createBrowserRouter([
         path: "/about",
         element: <AboutPage />,
       },
-      //Tasks
       {
         path: "/tasks",
         element: <TaskDashboard />,
+      },
+      {
+        path: "/maintainance",
+        element: <MaintenanceDashboard />,
       },
     ],
   },

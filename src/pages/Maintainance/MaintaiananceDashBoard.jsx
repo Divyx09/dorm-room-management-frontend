@@ -1,129 +1,174 @@
-import React, { useState } from 'react';
-import { format } from 'date-fns';
+import React, { useState, useEffect } from "react";
+import MaintenanceRequestForm from "./MaintainanceForm";
 
 const MaintenanceDashboard = () => {
   const [requests, setRequests] = useState([
     {
       id: 1,
-      title: 'Leaking Faucet',
-      description: 'Bathroom sink faucet is constantly dripping',
-      status: 'pending',
-      priority: 'medium',
-      location: 'Room 203',
-      submittedDate: '2024-03-20',
-      images: []
+      title: "Leaking Faucet",
+      description: "Bathroom sink faucet is constantly dripping",
+      status: "pending",
+      priority: "medium",
+      location: "Room 203",
+      submittedDate: "2024-03-20",
+      images: [],
     },
     {
       id: 2,
-      title: 'AC Not Working',
-      description: 'Air conditioning unit making loud noise and not cooling properly',
-      status: 'in-progress',
-      priority: 'high',
-      location: 'Room 203',
-      submittedDate: '2024-03-19',
-      images: []
+      title: "AC Not Working",
+      description:
+        "Air conditioning unit making loud noise and not cooling properly",
+      status: "in-progress",
+      priority: "high",
+      location: "Room 203",
+      submittedDate: "2024-03-19",
+      images: [],
     },
     {
       id: 3,
-      title: 'Light Bulb Replacement',
-      description: 'Common area light bulb needs replacement',
-      status: 'resolved',
-      priority: 'low',
-      location: 'Common Area',
-      submittedDate: '2024-03-18',
-      images: []
-    }
+      title: "Light Bulb Replacement",
+      description: "Common area light bulb needs replacement",
+      status: "resolved",
+      priority: "low",
+      location: "Common Area",
+      submittedDate: "2024-03-18",
+      images: [],
+    },
   ]);
 
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState("all");
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
 
-  const filteredRequests = activeFilter === 'all' 
-    ? requests 
-    : requests.filter(request => request.status === activeFilter);
+  const filteredRequests =
+    activeFilter === "all"
+      ? requests
+      : requests.filter((request) => request.status === activeFilter);
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'var(--status-pending)';
-      case 'in-progress': return 'var(--status-in-progress)';
-      case 'resolved': return 'var(--status-resolved)';
-      default: return 'var(--status-pending)';
+      case "pending":
+        return "var(--status-pending)";
+      case "in-progress":
+        return "var(--status-in-progress)";
+      case "resolved":
+        return "var(--status-resolved)";
+      default:
+        return "var(--status-pending)";
     }
   };
 
   const getPriorityIcon = (priority) => {
     switch (priority) {
-      case 'high': return '🔴';
-      case 'medium': return '🟡';
-      case 'low': return '🟢';
-      default: return '⚪';
+      case "high":
+        return "🔴";
+      case "medium":
+        return "🟡";
+      case "low":
+        return "🟢";
+      default:
+        return "⚪";
     }
   };
 
+  const handleNewRequest = (formData) => {
+    const newRequest = {
+      id: requests.length + 1,
+      ...formData,
+      status: "pending",
+      submittedDate: new Date().toISOString().slice(0, 10),
+    };
+    setRequests([newRequest, ...requests]);
+    setShowNewRequestModal(false);
+  };
+
+  // Handle body scroll lock when modal is open
+  useEffect(() => {
+    if (showNewRequestModal) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, [showNewRequestModal]);
+
   return (
-    <div className="maintenance-dashboard">
+    <div className='maintenance-dashboard'>
       {/* Header Section */}
-      <div className="dashboard-header">
-        <div className="header-content">
-          <div className="title-section">
+      <div className='dashboard-header'>
+        <div className='header-content'>
+          <div className='title-section'>
             <h1>Maintenance Requests</h1>
-            <p className="text-muted">Track and manage your maintenance requests</p>
+            <p className='text-muted'>
+              Track and manage your maintenance requests
+            </p>
           </div>
-          <button 
-            className="btn-new-request" 
+          <button
+            className='btn-new-request'
             onClick={() => setShowNewRequestModal(true)}
           >
-            <i className="bi bi-plus-lg"></i>
+            <i className='bi bi-plus-lg'></i>
             New Request
           </button>
         </div>
 
         {/* Stats Section */}
-        <div className="stats-container">
-          <div className="stat-card">
-            <div className="stat-value">
-              {requests.filter(r => r.status === 'pending').length}
+        <div className='stats-container'>
+          <div className='stat-card'>
+            <div className='stat-value'>
+              {requests.filter((r) => r.status === "pending").length}
             </div>
-            <div className="stat-label">Pending</div>
+            <div className='stat-label'>Pending</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value">
-              {requests.filter(r => r.status === 'in-progress').length}
+          <div className='stat-card'>
+            <div className='stat-value'>
+              {requests.filter((r) => r.status === "in-progress").length}
             </div>
-            <div className="stat-label">In Progress</div>
+            <div className='stat-label'>In Progress</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value">
-              {requests.filter(r => r.status === 'resolved').length}
+          <div className='stat-card'>
+            <div className='stat-value'>
+              {requests.filter((r) => r.status === "resolved").length}
             </div>
-            <div className="stat-label">Resolved</div>
+            <div className='stat-label'>Resolved</div>
           </div>
         </div>
 
         {/* Filter Section */}
-        <div className="filter-section">
-          <div className="filter-pills">
-            <button 
-              className={`filter-pill ${activeFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('all')}
+        <div className='filter-section'>
+          <div className='filter-pills'>
+            <button
+              className={`filter-pill ${
+                activeFilter === "all" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("all")}
             >
               All Requests
             </button>
-            <button 
-              className={`filter-pill ${activeFilter === 'pending' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('pending')}
+            <button
+              className={`filter-pill ${
+                activeFilter === "pending" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("pending")}
             >
               Pending
             </button>
-            <button 
-              className={`filter-pill ${activeFilter === 'in-progress' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('in-progress')}
+            <button
+              className={`filter-pill ${
+                activeFilter === "in-progress" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("in-progress")}
             >
               In Progress
             </button>
-            <button 
-              className={`filter-pill ${activeFilter === 'resolved' ? 'active' : ''}`}
-              onClick={() => setActiveFilter('resolved')}
+            <button
+              className={`filter-pill ${
+                activeFilter === "resolved" ? "active" : ""
+              }`}
+              onClick={() => setActiveFilter("resolved")}
             >
               Resolved
             </button>
@@ -132,47 +177,83 @@ const MaintenanceDashboard = () => {
       </div>
 
       {/* Requests Grid */}
-      <div className="requests-grid">
-        {filteredRequests.map(request => (
-          <div key={request.id} className="request-card">
-            <div className="request-header">
-              <div className="priority-indicator" title={`Priority: ${request.priority}`}>
+      <div className='requests-grid'>
+        {filteredRequests.map((request) => (
+          <div key={request.id} className='request-card'>
+            <div className='request-header'>
+              <div
+                className='priority-indicator'
+                title={`Priority: ${request.priority}`}
+              >
                 {getPriorityIcon(request.priority)}
               </div>
-              <div className="status-badge" style={{ backgroundColor: getStatusColor(request.status) }}>
+              <div
+                className='status-badge'
+                style={{ backgroundColor: getStatusColor(request.status) }}
+              >
                 {request.status}
               </div>
             </div>
-            
-            <div className="request-content">
-              <h3 className="request-title">{request.title}</h3>
-              <p className="request-description">{request.description}</p>
-              
-              <div className="request-meta">
-                <div className="meta-item">
-                  <i className="bi bi-geo-alt"></i>
+
+            <div className='request-content'>
+              <h3 className='request-title'>{request.title}</h3>
+              <p className='request-description'>{request.description}</p>
+
+              <div className='request-meta'>
+                <div className='meta-item'>
+                  <i className='bi bi-geo-alt'></i>
                   {request.location}
                 </div>
-                <div className="meta-item">
-                  <i className="bi bi-calendar"></i>
-                  {format(new Date(request.submittedDate), 'MMM dd, yyyy')}
+                <div className='meta-item'>
+                  <i className='bi bi-calendar'></i>
+                  {new Date(request.submittedDate).toLocaleDateString()}
                 </div>
               </div>
             </div>
 
-            <div className="request-actions">
-              <button className="btn-action">
-                <i className="bi bi-chat"></i>
+            <div className='request-actions'>
+              <button className='btn-action'>
+                <i className='bi bi-chat'></i>
                 Comment
               </button>
-              <button className="btn-action">
-                <i className="bi bi-info-circle"></i>
+              <button className='btn-action'>
+                <i className='bi bi-info-circle'></i>
                 Details
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* New Request Modal */}
+      {showNewRequestModal && (
+        <>
+          <div
+            className='modal-overlay'
+            onClick={() => setShowNewRequestModal(false)}
+          />
+          <div className='modal-wrapper'>
+            <div className='modal-dialog modal-lg'>
+              <div className='modal-content'>
+                <div className='modal-header'>
+                  <h5 className='modal-title'>New Maintenance Request</h5>
+                  <button
+                    type='button'
+                    className='btn-close'
+                    onClick={() => setShowNewRequestModal(false)}
+                  />
+                </div>
+                <div className='modal-body'>
+                  <MaintenanceRequestForm
+                    onSubmit={handleNewRequest}
+                    onCancel={() => setShowNewRequestModal(false)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

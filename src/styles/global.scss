@@ -1513,3 +1513,105 @@
     border-color: #007bff;
   }
 }
+
+// Modal styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
+
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+  overflow-y: auto;
+
+  .modal-dialog {
+    width: 100%;
+    max-width: 800px;
+    margin: 1.75rem auto;
+    pointer-events: auto;
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: none;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+
+    .modal-title {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .btn-close {
+      padding: 1rem;
+      margin: -1rem -1rem -1rem auto;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font-size: 1.5rem;
+      
+      &:hover {
+        opacity: 0.75;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+    
+    .maintenance-request-form {
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .modal-wrapper {
+    padding: 0.5rem;
+
+    .modal-dialog {
+      margin: 0.5rem;
+    }
+
+    .modal-header {
+      padding: 1rem;
+    }
+
+    .modal-body {
+      padding: 1rem;
+    }
+  }
+}
+
+// Prevent body scroll when modal is open
+body.modal-open {
+  overflow: hidden;
+}
