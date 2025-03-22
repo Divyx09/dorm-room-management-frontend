@@ -11,6 +11,7 @@ import ForgotPasswordPage from "../pages/Auth/ForgotPage";
 import AboutPage from "../pages/About/AboutPage";
 import TaskDashboard from "../pages/Tasks/TaskDashBoard";
 import MaintenanceDashboard from "../pages/Maintainance/MaintaiananceDashBoard";
+import ExpenseDashboard from "../pages/Expenses/ExpensesDashBoard";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/maintainance",
         element: <MaintenanceDashboard />,
+      },
+      {
+        path: "/expenses",
+        element: <ExpenseDashboard />,
       },
     ],
   },

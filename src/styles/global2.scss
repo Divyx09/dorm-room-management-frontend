@@ -48,6 +48,110 @@
   }
 }
 
+.expense-dashboard {
+  .balance-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    h6 {
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+    }
+
+    .balance-amount {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+
+      &.positive {
+        color: #28a745;
+      }
+
+      &.negative {
+        color: #dc3545;
+      }
+    }
+
+    .balance-status {
+      font-size: 0.875rem;
+      color: #6c757d;
+    }
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+
+    &.settled {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    &.pending {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+  }
+
+  .floating-add-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 1000;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+    }
+
+    @media (min-width: 768px) {
+      display: none; // Hide on desktop as we have the button in the card header
+    }
+  }
+
+  .table {
+    th {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 767.98px) {
+  .expense-dashboard {
+    .balance-card {
+      margin-bottom: 1rem;
+    }
+
+    .table-responsive {
+      margin: 0 -1rem;
+      padding: 0 1rem;
+    }
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 991.98px) {
   .dashboard {
