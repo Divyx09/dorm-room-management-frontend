@@ -4,12 +4,22 @@ import { Link } from "react-router-dom";
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle password reset logic here
-    console.log("Password reset requested for:", email);
-    setIsSubmitted(true);
+    setError("");
+
+    // Mock password reset logic
+    try {
+      // In a real app, this would make an API call
+      // For now, we'll just simulate success
+      setIsSubmitted(true);
+    } catch (error) {
+      // eslint-disable-line no-unused-vars
+      console.log(error);
+      setError("Failed to send reset email");
+    }
   };
 
   return (
@@ -26,11 +36,27 @@ const ForgotPasswordPage = () => {
                   </p>
                 </div>
 
-                {!isSubmitted ? (
+                {error && (
+                  <div className='alert alert-danger' role='alert'>
+                    {error}
+                  </div>
+                )}
+
+                {isSubmitted ? (
+                  <div className='text-center'>
+                    <div className='alert alert-success' role='alert'>
+                      If an account exists with {email}, you will receive
+                      password reset instructions.
+                    </div>
+                    <Link to='/auth/login' className='btn btn-primary'>
+                      Return to Login
+                    </Link>
+                  </div>
+                ) : (
                   <form onSubmit={handleSubmit}>
-                    <div className='mb-4'>
+                    <div className='mb-3'>
                       <label htmlFor='email' className='form-label'>
-                        Email address
+                        Email Address
                       </label>
                       <input
                         type='email'
@@ -38,7 +64,6 @@ const ForgotPasswordPage = () => {
                         id='email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder='Enter your email'
                         required
                       />
                     </div>
@@ -54,30 +79,14 @@ const ForgotPasswordPage = () => {
                       <p className='mb-0'>
                         Remember your password?{" "}
                         <Link
-                          to='/login'
+                          to='/auth/login'
                           className='text-primary text-decoration-none'
                         >
-                          Back to Login
+                          Login
                         </Link>
                       </p>
                     </div>
                   </form>
-                ) : (
-                  <div className='text-center'>
-                    <div className='alert alert-success' role='alert'>
-                      <i className='bi bi-check-circle me-2'></i>
-                      Password reset link has been sent to your email address.
-                    </div>
-                    <p className='mb-0'>
-                      Didn't receive the email?{" "}
-                      <button
-                        className='btn btn-link p-0 text-primary text-decoration-none'
-                        onClick={() => setIsSubmitted(false)}
-                      >
-                        Try again
-                      </button>
-                    </p>
-                  </div>
                 )}
               </div>
             </div>

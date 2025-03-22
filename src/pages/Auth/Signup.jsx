@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -9,6 +12,7 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,9 +22,37 @@ const SignupPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup form submitted:", formData);
+    setError("");
+
+    // Basic validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    // Mock signup - In real app, this would be an API call
+    try {
+      const newUser = {
+        id: Date.now(),
+        email: formData.email,
+        name: `${formData.firstName} ${formData.lastName}`,
+        role: "user", // Default role for new signups
+      };
+
+      // Store in localStorage (mock database)
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      users.push({ ...newUser, password: formData.password });
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Log the user in
+      login(newUser);
+      navigate("/dashboard/tasks");
+    } catch (err) {
+      console.log(err);
+      setError("Failed to create account");
+    }
   };
 
   return (
@@ -35,6 +67,12 @@ const SignupPage = () => {
                   <p className='text-muted'>Join DormMate today</p>
                 </div>
 
+                {error && (
+                  <div className='alert alert-danger' role='alert'>
+                    {error}
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit}>
                   <div className='row'>
                     <div className='col-md-6 mb-3'>
@@ -48,7 +86,6 @@ const SignupPage = () => {
                         name='firstName'
                         value={formData.firstName}
                         onChange={handleChange}
-                        placeholder='Enter first name'
                         required
                       />
                     </div>
@@ -63,7 +100,6 @@ const SignupPage = () => {
                         name='lastName'
                         value={formData.lastName}
                         onChange={handleChange}
-                        placeholder='Enter last name'
                         required
                       />
                     </div>
@@ -71,7 +107,7 @@ const SignupPage = () => {
 
                   <div className='mb-3'>
                     <label htmlFor='email' className='form-label'>
-                      Email address
+                      Email Address
                     </label>
                     <input
                       type='email'
@@ -80,7 +116,6 @@ const SignupPage = () => {
                       name='email'
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder='Enter your email'
                       required
                     />
                   </div>
@@ -96,7 +131,6 @@ const SignupPage = () => {
                       name='password'
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder='Create password'
                       required
                     />
                   </div>
@@ -112,7 +146,6 @@ const SignupPage = () => {
                       name='confirmPassword'
                       value={formData.confirmPassword}
                       onChange={handleChange}
-                      placeholder='Confirm password'
                       required
                     />
                   </div>
@@ -146,7 +179,7 @@ const SignupPage = () => {
                     <p className='mb-0'>
                       Already have an account?{" "}
                       <Link
-                        to='/login'
+                        to='/auth/login'
                         className='text-primary text-decoration-none'
                       >
                         Login
