@@ -13,6 +13,7 @@ const SignupPage = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +26,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
@@ -32,26 +34,44 @@ const SignupPage = () => {
       return;
     }
 
-    // Mock signup - In real app, this would be an API call
     try {
+      const response = await fetch('https://192.168.65.153:8082/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const data = await response.json();
+
+      // Create user object from response
       const newUser = {
-        id: Date.now(),
+        id: data.id || Date.now(),
         email: formData.email,
         name: `${formData.firstName} ${formData.lastName}`,
         role: "user", // Default role for new signups
+        // Add any additional user data from the API response
       };
-
-      // Store in localStorage (mock database)
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      users.push({ ...newUser, password: formData.password });
-      localStorage.setItem("users", JSON.stringify(users));
 
       // Log the user in
       login(newUser);
       navigate("/dashboard/tasks");
     } catch (err) {
-      console.log(err);
-      setError("Failed to create account");
+      console.error('Registration error:', err);
+      setError(err.message || "Failed to create account");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -171,8 +191,12 @@ const SignupPage = () => {
                     </div>
                   </div>
 
-                  <button type='submit' className='btn btn-primary w-100 mb-3'>
-                    Sign Up
+                  <button 
+                    type='submit' 
+                    className='btn btn-primary w-100 mb-3'
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Creating Account...' : 'Sign Up'}
                   </button>
 
                   <div className='text-center'>
