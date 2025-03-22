@@ -9,6 +9,13 @@ const HomePage = () => {
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [potentialRoommates, setPotentialRoommates] = useState([]);
 
+  // Calculate total pending expenses
+  const calculateTotalExpenses = () => {
+    return expenses
+      .filter(exp => exp.status === "pending")
+      .reduce((acc, exp) => acc + exp.amount, 0);
+  };
+
   // Load initial data
   useEffect(() => {
     // In a real app, these would be API calls
@@ -95,8 +102,8 @@ const HomePage = () => {
             <FaMoneyBill />
           </div>
           <div className='stat-content'>
-            <h3>${expenses.reduce((acc, exp) => acc + exp.amount, 0)}</h3>
-            <p>Total Expenses</p>
+            <h3>${calculateTotalExpenses()}</h3>
+            <p>Pending Expenses</p>
             <div className='progress' style={{ height: "4px" }}>
               <div
                 className='progress-bar bg-success'
