@@ -8,6 +8,7 @@ import NotFoundPage from "../pages/NotFound/NotFoundPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import SignupPage from "../pages/Auth/Signup";
 import ForgotPasswordPage from "../pages/Auth/ForgotPage";
+import AboutPage from "../pages/About/AboutPage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/forgot-password",
         element: <ForgotPasswordPage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
       },
     ],
   },
