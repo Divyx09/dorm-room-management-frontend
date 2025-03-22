@@ -7,7 +7,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     color: #333;
-    
+
     &:hover {
       color: #007bff;
     }
@@ -16,7 +16,7 @@
   .navbar-toggler {
     border: none;
     padding: 0.5rem;
-    
+
     &:focus {
       box-shadow: none;
       outline: none;
@@ -44,21 +44,21 @@
     .btn {
       padding: 0.5rem 1.5rem;
       font-weight: 500;
-      
+
       &-outline-primary {
         border-color: #007bff;
         color: #007bff;
-        
+
         &:hover {
           background-color: #007bff;
           color: #ffffff;
         }
       }
-      
+
       &-primary {
         background-color: #007bff;
         border-color: #007bff;
-        
+
         &:hover {
           background-color: #0056b3;
           border-color: #0056b3;
@@ -104,7 +104,7 @@
       padding-bottom: 0.5rem;
 
       &:after {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         bottom: 0;
@@ -156,7 +156,7 @@
         position: relative;
 
         &:before {
-          content: '→';
+          content: "→";
           margin-right: 0.5rem;
           opacity: 0;
           transform: translateX(-10px);
@@ -239,7 +239,6 @@
 
 // Responsive Styles
 @media (max-width: 991.98px) {
-  
 }
 
 @media (max-width: 767.98px) {
@@ -274,7 +273,7 @@
       margin: 1rem 0 0 0;
       display: flex;
       gap: 0.5rem;
-      
+
       .btn {
         flex: 1;
         text-align: center;
@@ -283,9 +282,50 @@
   }
 }
 
-
-
 // Responsive styles
 @media (max-width: 991.98px) {
+}
 
+// Login Page Styles
+.login-page {
+  min-height: calc(100vh - 140px); // Adjust based on your navbar/footer height
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+
+  .card {
+    border: none;
+    border-radius: 10px;
+
+    .card-body {
+      padding: 2rem;
+    }
+  }
+
+  .form-control {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      border-color: #80bdff;
+    }
+  }
+
+  .btn-primary {
+    padding: 0.75rem;
+    font-weight: 500;
+    border-radius: 8px;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
 }
