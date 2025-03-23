@@ -35,25 +35,27 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await fetch('https://192.168.65.153:8082/auth/register', {
+      console.log(formData.email)
+      const response = await fetch('http://localhost:8082/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
+          name:formData.firstName,
+          username: formData.email,
           password: formData.password,
-          firstName: formData.firstName,
-          lastName: formData.lastName
+          role:"USER"
         })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
-      }
+      // if (!response.ok) {
+      //   const errorData = await response;
+      //   throw new Error(errorData.text|| 'Registration failed');
+      // }
 
-      const data = await response.json();
+      const data = await response.text;
+      console.log(data)
 
       // Create user object from response
       const newUser = {
@@ -68,8 +70,8 @@ const SignupPage = () => {
       login(newUser);
       navigate("/dashboard/tasks");
     } catch (err) {
-      console.error('Registration error:', err);
-      setError(err.message || "Failed to create account");
+      // console.error('Registration error:', err);
+      setError(err.text || "Failed to create account");
     } finally {
       setIsLoading(false);
     }
