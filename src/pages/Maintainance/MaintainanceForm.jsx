@@ -78,14 +78,35 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
           </label>
           <input
             type="text"
-            className={`form-control ${errors.title ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.title ? "is-invalid" : ""}`}
             id="title"
             name="title"
             value={formData.title}
             onChange={handleChange}
             placeholder="Enter request title"
           />
-          {errors.title && <div className="invalid-feedback">{errors.title}</div>}
+          {errors.title && (
+            <div className="invalid-feedback">{errors.title}</div>
+          )}
+        </div>
+
+        <div className="form-group mb-3">
+          <label htmlFor="title" className="form-label">
+            <i className="bi bi-exclamation-circle me-2"></i>
+            Request Type <span className="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            className={`form-control ${errors.type ? "is-invalid" : ""}`}
+            id="type"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            placeholder="Enter request type"
+          />
+          {errors.type && (
+            <div className="invalid-feedback">{errors.type}</div>
+          )}
         </div>
 
         <div className="form-group mb-3">
@@ -95,14 +116,16 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
           </label>
           <input
             type="text"
-            className={`form-control ${errors.location ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.location ? "is-invalid" : ""}`}
             id="location"
             name="location"
             value={formData.location}
             onChange={handleChange}
             placeholder="Enter location (e.g., Room 203, Common Area)"
           />
-          {errors.location && <div className="invalid-feedback">{errors.location}</div>}
+          {errors.location && (
+            <div className="invalid-feedback">{errors.location}</div>
+          )}
         </div>
 
         <div className="form-group mb-3">
@@ -111,7 +134,7 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
             Description <span className="text-danger">*</span>
           </label>
           <textarea
-            className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.description ? "is-invalid" : ""}`}
             id="description"
             name="description"
             value={formData.description}
@@ -119,7 +142,9 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
             rows="4"
             placeholder="Describe the maintenance issue in detail"
           />
-          {errors.description && <div className="invalid-feedback">{errors.description}</div>}
+          {errors.description && (
+            <div className="invalid-feedback">{errors.description}</div>
+          )}
         </div>
 
         <div className="form-group mb-3">
@@ -128,7 +153,7 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
             Priority Level
           </label>
           <div className="d-flex gap-3">
-            {priorities.map(priority => (
+            {priorities.map((priority) => (
               <div key={priority.value} className="form-check">
                 <input
                   type="radio"
@@ -139,7 +164,10 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
                   checked={formData.priority === priority.value}
                   onChange={handleChange}
                 />
-                <label className="form-check-label" htmlFor={`priority-${priority.value}`}>
+                <label
+                  className="form-check-label"
+                  htmlFor={`priority-${priority.value}`}
+                >
                   {priority.icon} {priority.label}
                 </label>
               </div>
@@ -166,14 +194,18 @@ const MaintenanceRequestForm = ({ onSubmit, onCancel }) => {
                   <img
                     src={URL.createObjectURL(image)}
                     alt={`Preview ${index + 1}`}
-                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                    }}
                     className="rounded"
                   />
                   <button
                     type="button"
                     className="btn btn-sm btn-danger position-absolute top-0 end-0"
                     onClick={() => removeImage(index)}
-                    style={{ padding: '0.1rem 0.3rem' }}
+                    style={{ padding: "0.1rem 0.3rem" }}
                   >
                     ×
                   </button>

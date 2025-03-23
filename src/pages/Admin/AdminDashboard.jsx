@@ -51,7 +51,7 @@ const AdminDashboard = () => {
           </Link>
           <Link to='/admin/students' className='menu-item'>
             <i className='bi bi-people me-2'></i>
-            Students
+            Users
           </Link>
           <Link to='/admin/maintenance' className='menu-item'>
             <i className='bi bi-tools me-2'></i>

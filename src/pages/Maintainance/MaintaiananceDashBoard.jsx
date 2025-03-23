@@ -3,38 +3,9 @@ import MaintenanceRequestForm from "./MaintainanceForm";
 
 const MaintenanceDashboard = () => {
   const [requests, setRequests] = useState([
-    {
-      id: 1,
-      title: "Leaking Faucet",
-      description: "Bathroom sink faucet is constantly dripping",
-      status: "pending",
-      priority: "medium",
-      location: "Room 203",
-      submittedDate: "2024-03-20",
-      images: [],
-    },
-    {
-      id: 2,
-      title: "AC Not Working",
-      description:
-        "Air conditioning unit making loud noise and not cooling properly",
-      status: "in-progress",
-      priority: "high",
-      location: "Room 203",
-      submittedDate: "2024-03-19",
-      images: [],
-    },
-    {
-      id: 3,
-      title: "Light Bulb Replacement",
-      description: "Common area light bulb needs replacement",
-      status: "resolved",
-      priority: "low",
-      location: "Common Area",
-      submittedDate: "2024-03-18",
-      images: [],
-    },
   ]);
+  
+    console.log(requests);
 
   const [activeFilter, setActiveFilter] = useState("all");
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
@@ -70,15 +41,45 @@ const MaintenanceDashboard = () => {
     }
   };
 
-  const handleNewRequest = (formData) => {
-    const newRequest = {
-      id: requests.length + 1,
-      ...formData,
-      status: "pending",
-      submittedDate: new Date().toISOString().slice(0, 10),
-    };
-    setRequests([newRequest, ...requests]);
-    setShowNewRequestModal(false);
+  const handleShowUsersRequest = async() => {
+    const response = await fetch("http://localhost:8082/api/user/getuserrequests", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    });
+
+    const result = await response.json();
+    console.log(result);
+    setRequests(result);
+  }
+
+  const handleNewRequest = async(formData) => {
+  //   const newRequest = {
+  //     id: requests.length + 1,
+  //     ...formData,
+  //     status: "pending",
+  //     submittedDate: new Date().toISOString().slice(0, 10),
+  //   };
+
+    const response = await fetch("http://localhost:8082/api/user/addrequest", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        title:formData.title,
+        description:formData.description,
+        requestType:formData.type,
+        status:"pending"
+      }),
+    });
+
+    const result  = await response.text();
+    console.log(result)
+    alert(result)
   };
 
   // Handle body scroll lock when modal is open
@@ -88,6 +89,8 @@ const MaintenanceDashboard = () => {
     } else {
       document.body.classList.remove("modal-open");
     }
+
+    handleShowUsersRequest();
 
     // Cleanup on unmount
     return () => {
