@@ -33,10 +33,15 @@ const TaskForm = ({ onSubmit, onCancel, initialData = {} }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]:
+        name === "assignedTo"
+          ? roommates.find((r) => r.id == value)?.name || ""
+          : value,
     }));
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
@@ -60,66 +65,93 @@ const TaskForm = ({ onSubmit, onCancel, initialData = {} }) => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
 
-    if (Object.keys(newErrors).length === 0) {
-      onSubmit(formData);
-    } else {
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8082/api/tasks/addtask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          taskTitle: formData.title,
+          description: formData.description,
+          assignTo: formData.assignedTo, // Now sending name instead of ID
+          dueDate: formData.dueDate,
+          category: formData.category,
+          priority: formData.priority,
+        }),
+      });
+
+      const result = await response.json();
+      console.log(result);
+      alert("Task added successfully");
+
+      onSubmit(formData);
+    } catch (error) {
+      console.error("Error submitting task:", error);
     }
   };
 
   return (
-    <div className='task-form-container'>
-      <form onSubmit={handleSubmit} className='task-form'>
-        <div className='form-group mb-3'>
-          <label htmlFor='title' className='form-label'>
-            Task Title <span className='text-danger'>*</span>
+    <div className="task-form-container">
+      <form onSubmit={handleSubmit} className="task-form">
+        <div className="form-group mb-3">
+          <label htmlFor="title" className="form-label">
+            Task Title <span className="text-danger">*</span>
           </label>
           <input
-            type='text'
+            type="text"
             className={`form-control ${errors.title ? "is-invalid" : ""}`}
-            id='title'
-            name='title'
+            id="title"
+            name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder='Enter task title'
+            placeholder="Enter task title"
           />
           {errors.title && (
-            <div className='invalid-feedback'>{errors.title}</div>
+            <div className="invalid-feedback">{errors.title}</div>
           )}
         </div>
 
-        <div className='form-group mb-3'>
-          <label htmlFor='description' className='form-label'>
+        <div className="form-group mb-3">
+          <label htmlFor="description" className="form-label">
             Description
           </label>
           <textarea
-            className='form-control'
-            id='description'
-            name='description'
+            className="form-control"
+            id="description"
+            name="description"
             value={formData.description}
             onChange={handleChange}
-            rows='3'
-            placeholder='Enter task description'
+            rows="3"
+            placeholder="Enter task description"
           />
         </div>
 
-        <div className='row mb-3'>
-          <div className='col-md-6'>
-            <label htmlFor='assignedTo' className='form-label'>
-              Assign To <span className='text-danger'>*</span>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="assignedTo" className="form-label">
+              Assign To <span className="text-danger">*</span>
             </label>
             <select
               className={`form-select ${errors.assignedTo ? "is-invalid" : ""}`}
-              id='assignedTo'
-              name='assignedTo'
-              value={formData.assignedTo}
+              id="assignedTo"
+              name="assignedTo"
+              value={
+                roommates.find((r) => r.name === formData.assignedTo)?.id || ""
+              }
               onChange={handleChange}
             >
-              <option value=''>Select Roommate</option>
+              <option value="">Select Roommate</option>
               {roommates.map((roommate) => (
                 <option key={roommate.id} value={roommate.id}>
                   {roommate.name}
@@ -127,38 +159,38 @@ const TaskForm = ({ onSubmit, onCancel, initialData = {} }) => {
               ))}
             </select>
             {errors.assignedTo && (
-              <div className='invalid-feedback'>{errors.assignedTo}</div>
+              <div className="invalid-feedback">{errors.assignedTo}</div>
             )}
           </div>
 
-          <div className='col-md-6'>
-            <label htmlFor='dueDate' className='form-label'>
-              Due Date <span className='text-danger'>*</span>
+          <div className="col-md-6">
+            <label htmlFor="dueDate" className="form-label">
+              Due Date <span className="text-danger">*</span>
             </label>
             <input
-              type='date'
+              type="date"
               className={`form-control ${errors.dueDate ? "is-invalid" : ""}`}
-              id='dueDate'
-              name='dueDate'
+              id="dueDate"
+              name="dueDate"
               value={formData.dueDate}
               onChange={handleChange}
               min={new Date().toISOString().slice(0, 10)}
             />
             {errors.dueDate && (
-              <div className='invalid-feedback'>{errors.dueDate}</div>
+              <div className="invalid-feedback">{errors.dueDate}</div>
             )}
           </div>
         </div>
 
-        <div className='row mb-3'>
-          <div className='col-md-6'>
-            <label htmlFor='category' className='form-label'>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="category" className="form-label">
               Category
             </label>
             <select
-              className='form-select'
-              id='category'
-              name='category'
+              className="form-select"
+              id="category"
+              name="category"
               value={formData.category}
               onChange={handleChange}
             >
@@ -170,14 +202,14 @@ const TaskForm = ({ onSubmit, onCancel, initialData = {} }) => {
             </select>
           </div>
 
-          <div className='col-md-6'>
-            <label htmlFor='priority' className='form-label'>
+          <div className="col-md-6">
+            <label htmlFor="priority" className="form-label">
               Priority
             </label>
             <select
-              className='form-select'
-              id='priority'
-              name='priority'
+              className="form-select"
+              id="priority"
+              name="priority"
               value={formData.priority}
               onChange={handleChange}
             >
@@ -190,15 +222,15 @@ const TaskForm = ({ onSubmit, onCancel, initialData = {} }) => {
           </div>
         </div>
 
-        <div className='form-actions'>
+        <div className="form-actions">
           <button
-            type='button'
-            className='btn btn-outline-secondary me-2'
+            type="button"
+            className="btn btn-outline-secondary me-2"
             onClick={onCancel}
           >
             Cancel
           </button>
-          <button type='submit' className='btn btn-primary'>
+          <button type="submit" className="btn btn-primary">
             Save Task
           </button>
         </div>

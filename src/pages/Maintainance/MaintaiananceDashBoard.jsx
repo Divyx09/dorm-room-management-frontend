@@ -13,7 +13,11 @@ const MaintenanceDashboard = () => {
   const filteredRequests =
     activeFilter === "all"
       ? requests
-      : requests.filter((request) => request.status === activeFilter);
+      : requests.filter(
+          (request) =>
+            request.status.toLowerCase() === activeFilter.toLowerCase()
+        );
+
 
   const getStatusColor = (status) => {
     switch (status) {
