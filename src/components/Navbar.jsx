@@ -10,12 +10,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Current user:', user);
-    console.log('Current location:', location.pathname);
-  }, [user, location]);
-
-  // Close menus when location changes
-  useEffect(() => {
     setIsMenuOpen(false);
     setIsProfileOpen(false);
   }, [location]);
@@ -26,12 +20,10 @@ const Navbar = () => {
     setIsProfileOpen(false);
   };
 
-  // Function to check if a link is active
   const isActive = (path) => {
     return location.pathname === path ? "active" : "";
   };
 
-  // Navigation items based on authentication and role
   const getNavItems = () => {
     const commonLinks = (
       <>
@@ -57,7 +49,10 @@ const Navbar = () => {
       return commonLinks;
     }
 
-    if (user.role === "ADMIN") {
+    // Convert role to uppercase for consistency
+    const userRole = user.role?.toUpperCase();
+
+    if (userRole === "ADMIN") {
       return (
         <>
           {commonLinks}
@@ -100,6 +95,7 @@ const Navbar = () => {
       );
     }
 
+    // USER role navigation
     return (
       <>
         {commonLinks}
@@ -108,24 +104,33 @@ const Navbar = () => {
             className={`nav-link ${isActive("/dashboard/tasks")}`}
             to='/dashboard/tasks'
           >
-            Tasks
+            Dashboard
           </Link>
         </li>
-        <li className='nav-item'>
-          <Link
-            className={`nav-link ${isActive("/dashboard/maintenance")}`}
-            to='/dashboard/maintenance'
+        <li className='nav-item dropdown'>
+          <button
+            className='nav-link dropdown-toggle'
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            Maintenance
-          </Link>
-        </li>
-        <li className='nav-item'>
-          <Link
-            className={`nav-link ${isActive("/dashboard/expenses")}`}
-            to='/dashboard/expenses'
-          >
-            Expenses
-          </Link>
+            Services
+          </button>
+          <ul className={`dropdown-menu ${isMenuOpen ? "show" : ""}`}>
+            <li>
+              <Link className='dropdown-item' to='/dashboard/tasks'>
+                Tasks
+              </Link>
+            </li>
+            <li>
+              <Link className='dropdown-item' to='/dashboard/maintenance'>
+                Maintenance
+              </Link>
+            </li>
+            <li>
+              <Link className='dropdown-item' to='/dashboard/expenses'>
+                Expenses
+              </Link>
+            </li>
+          </ul>
         </li>
       </>
     );
@@ -167,14 +172,7 @@ const Navbar = () => {
                   <span className='me-3 text-primary'>
                     Welcome, {user.name || "User"} ({user.role})
                   </span>
-                  <button
-                    onClick={handleLogout}
-                    className='btn btn-outline-danger me-3'
-                  >
-                    <i className='bi bi-box-arrow-right me-1'></i>
-                    Logout
-                  </button>
-                  <div className='profile-dropdown'>
+                  <div className='profile-dropdown me-3'>
                     <button
                       className='profile-icon btn btn-link'
                       onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -205,12 +203,18 @@ const Navbar = () => {
                       </Link>
                       {user.role === "ADMIN" && (
                         <Link to='/admin/settings' className='dropdown-item'>
-                          <i className='bi bi-shield-lock me-2'></i>Admin
-                          Settings
+                          <i className='bi bi-shield-lock me-2'></i>Admin Settings
                         </Link>
                       )}
                     </div>
                   </div>
+                  <button
+                    onClick={handleLogout}
+                    className='btn btn-outline-danger'
+                  >
+                    <i className='bi bi-box-arrow-right me-1'></i>
+                    Logout
+                  </button>
                 </div>
               </>
             )}

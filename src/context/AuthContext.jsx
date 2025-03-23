@@ -22,8 +22,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    // Ensure role is uppercase
+    const normalizedUserData = {
+      ...userData,
+      role: userData.role?.toUpperCase()
+    };
+    setUser(normalizedUserData);
+    localStorage.setItem("user", JSON.stringify(normalizedUserData));
     localStorage.setItem("token", userData.token);
   };
 

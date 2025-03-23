@@ -38,10 +38,18 @@ const LoginPage = () => {
 
       const data = await response.json();
       console.log("Login Success:", data);
-      login(data);
 
-      const from = location.state?.from?.pathname || "/dashboard/tasks";
-      navigate(from, { replace: true });
+      // Ensure role is uppercase
+      const userData = {
+        ...data,
+        role: data.role?.toUpperCase() || "USER"
+      };
+
+      login(userData);
+
+      // Redirect based on role
+      const redirectPath = userData.role === "ADMIN" ? "/admin" : "/dashboard/tasks";
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Login Error:", error);
       setError("Invalid email or password");
