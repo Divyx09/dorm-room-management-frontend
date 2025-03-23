@@ -130,12 +130,15 @@ const HomePage = () => {
     navigate(`/roommate-finder/${roommateId}`);
   };
 
+  const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest" };
+  console.log(user.name);
+
   return (
     <div className='dashboard-container'>
       {/* Welcome Section */}
       <div className='welcome-section mb-4'>
         <h1>
-          Welcome back, <span className='text-primary'>John</span> 👋
+          Welcome back, <span className='text-primary'>{user.name}</span> 👋
         </h1>
         <p className='text-muted'>
           Here's what's happening in your dormitory today
