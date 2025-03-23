@@ -1,4 +1,9 @@
-import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider } from "../context/AuthContext";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import RootLayout from "./layouts/RootLayout";
@@ -33,9 +38,9 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <AuthProvider>
-        <div className="app-container">
+        <div className='app-container'>
           <Navbar />
-          <div className="main-content">
+          <div className='main-content'>
             <Outlet />
           </div>
           <Footer />
@@ -85,7 +90,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Navigate to="tasks" replace />,
+            element: <Navigate to='tasks' replace />,
           },
           {
             path: "tasks",

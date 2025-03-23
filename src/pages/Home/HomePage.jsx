@@ -9,6 +9,82 @@ const HomePage = () => {
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
   const [potentialRoommates, setPotentialRoommates] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // If user is not logged in, show landing page content
+  if (!user) {
+    return (
+      <div className="landing-page">
+        {/* Hero Section */}
+        <section className="hero-section text-center py-5">
+          <div className="container">
+            <h1 className="display-4 mb-4">Welcome to DormMate</h1>
+            <p className="lead mb-4">
+              Your all-in-one solution for managing dormitory life. Track tasks, 
+              split expenses, and find compatible roommates effortlessly.
+            </p>
+            <div className="cta-buttons">
+              <Link to="/auth/signup" className="btn btn-primary btn-lg me-3">
+                Get Started
+              </Link>
+              <Link to="/auth/login" className="btn btn-outline-primary btn-lg">
+                Login
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="features-section py-5 bg-light">
+          <div className="container">
+            <h2 className="text-center mb-5">Why Choose DormMate?</h2>
+            <div className="row g-4">
+              <div className="col-md-3">
+                <div className="feature-card text-center p-4">
+                  <FaTasks className="feature-icon text-primary mb-3" size={40} />
+                  <h3 className="h5">Task Management</h3>
+                  <p>Keep track of your daily tasks and never miss a deadline.</p>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="feature-card text-center p-4">
+                  <FaMoneyBill className="feature-icon text-success mb-3" size={40} />
+                  <h3 className="h5">Expense Tracking</h3>
+                  <p>Split bills and manage shared expenses with ease.</p>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="feature-card text-center p-4">
+                  <FaTools className="feature-icon text-warning mb-3" size={40} />
+                  <h3 className="h5">Maintenance Requests</h3>
+                  <p>Submit and track maintenance issues in real-time.</p>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="feature-card text-center p-4">
+                  <FaUserFriends className="feature-icon text-info mb-3" size={40} />
+                  <h3 className="h5">Roommate Matching</h3>
+                  <p>Find compatible roommates based on your preferences.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Call to Action Section */}
+        <section className="cta-section py-5">
+          <div className="container text-center">
+            <h2 className="mb-4">Ready to simplify your dorm life?</h2>
+            <p className="mb-4">Join thousands of students who are already using DormMate.</p>
+            <Link to="/auth/signup" className="btn btn-primary btn-lg">
+              Sign Up Now
+            </Link>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   // Calculate total pending expenses
   const calculateTotalExpenses = () => {
     return expenses
@@ -129,9 +205,6 @@ const HomePage = () => {
   const handleRoommateAction = (roommateId) => {
     navigate(`/roommate-finder/${roommateId}`);
   };
-
-  const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest" };
-  console.log(user.name);
 
   return (
     <div className='dashboard-container'>

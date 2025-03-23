@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -42,13 +41,14 @@ const LoginPage = () => {
       // Ensure role is uppercase
       const userData = {
         ...data,
-        role: data.role?.toUpperCase() || "USER"
+        role: data.role?.toUpperCase() || "USER",
       };
 
       login(userData);
 
       // Redirect based on role
-      const redirectPath = userData.role === "ADMIN" ? "/admin" : "/dashboard/tasks";
+      const redirectPath =
+        userData.role === "ADMIN" ? "/admin" : "/dashboard/tasks";
       navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("Login Error:", error);
@@ -57,64 +57,64 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-page py-5">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-5">
-            <div className="card shadow-sm">
-              <div className="card-body p-4">
-                <div className="text-center mb-4">
-                  <h1 className="h3">Welcome Back</h1>
-                  <p className="text-muted">Sign in to continue</p>
+    <div className='login-page py-5'>
+      <div className='container'>
+        <div className='row justify-content-center'>
+          <div className='col-md-6 col-lg-5'>
+            <div className='card shadow-sm'>
+              <div className='card-body p-4'>
+                <div className='text-center mb-4'>
+                  <h1 className='h3'>Welcome Back</h1>
+                  <p className='text-muted'>Sign in to continue</p>
                 </div>
 
                 {error && (
-                  <div className="alert alert-danger" role="alert">
+                  <div className='alert alert-danger' role='alert'>
                     {error}
                   </div>
                 )}
 
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
+                  <div className='mb-3'>
+                    <label htmlFor='email' className='form-label'>
                       Email address
                     </label>
                     <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
+                      type='email'
+                      className='form-control'
+                      id='email'
+                      name='email'
                       value={formData.email}
                       onChange={handleChange}
                       required
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
+                  <div className='mb-3'>
+                    <label htmlFor='password' className='form-label'>
                       Password
                     </label>
                     <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      name="password"
+                      type='password'
+                      className='form-control'
+                      id='password'
+                      name='password'
                       value={formData.password}
                       onChange={handleChange}
                       required
                     />
                   </div>
 
-                  <button type="submit" className="btn btn-primary w-100 mb-3">
+                  <button type='submit' className='btn btn-primary w-100 mb-3'>
                     Login
                   </button>
 
-                  <div className="text-center">
-                    <p className="mb-0">
+                  <div className='text-center'>
+                    <p className='mb-0'>
                       Don't have an account?{" "}
                       <Link
-                        to="/auth/signup"
-                        className="text-primary text-decoration-none"
+                        to='/auth/signup'
+                        className='text-primary text-decoration-none'
                       >
                         Sign Up
                       </Link>
