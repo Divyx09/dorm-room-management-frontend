@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 import { AuthProvider } from "../context/AuthContext";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import RootLayout from "./layouts/RootLayout";
@@ -32,11 +32,15 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <>
-        <Navbar />
-        <RootLayout />
-        <Footer />
-      </>
+      <AuthProvider>
+        <div className="app-container">
+          <Navbar />
+          <div className="main-content">
+            <Outlet />
+          </div>
+          <Footer />
+        </div>
+      </AuthProvider>
     ),
     errorElement: <NotFoundPage />,
     children: [
@@ -44,7 +48,6 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
-      // About and Contact Routes
       {
         path: "about",
         element: <AboutPage />,
@@ -71,15 +74,19 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // Protected Routes
+      // Protected Routes - User Dashboard
       {
         path: "dashboard",
         element: (
-          <ProtectedRoute roles={["user", "admin"]}>
+          <ProtectedRoute roles={["USER", "ADMIN"]}>
             <Outlet />
           </ProtectedRoute>
         ),
         children: [
+          {
+            path: "",
+            element: <Navigate to="tasks" replace />,
+          },
           {
             path: "tasks",
             element: <TaskDashboard />,
@@ -94,11 +101,11 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // Admin Routes
+      // Protected Routes - Admin
       {
         path: "admin",
         element: (
-          <ProtectedRoute roles={["admin"]}>
+          <ProtectedRoute roles={["ADMIN"]}>
             <Outlet />
           </ProtectedRoute>
         ),
@@ -123,22 +130,23 @@ const router = createBrowserRouter([
             path: "expenses",
             element: <ExpenseDashboard />,
           },
-          {
-            path: "settings",
-            element: <AdminDashboard />, // You might want to create a separate admin settings component
-          },
         ],
+      },
+      // Profile Routes
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute roles={["USER", "ADMIN"]}>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
 ]);
 
 const App = () => {
-  return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;

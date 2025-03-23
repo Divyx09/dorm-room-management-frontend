@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    console.log('Current user:', user);
+    console.log('Current location:', location.pathname);
+  }, [user, location]);
 
-  const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen);
-  };
+  // Close menus when location changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsProfileOpen(false);
+  }, [location]);
 
   const handleLogout = () => {
     logout();
@@ -54,7 +57,7 @@ const Navbar = () => {
       return commonLinks;
     }
 
-    if (user.role === "admin") {
+    if (user.role === "ADMIN") {
       return (
         <>
           {commonLinks}
@@ -66,11 +69,11 @@ const Navbar = () => {
           <li className='nav-item dropdown'>
             <button
               className='nav-link dropdown-toggle'
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               Management
             </button>
-            <ul className={`dropdown-menu ${isOpen ? "show" : ""}`}>
+            <ul className={`dropdown-menu ${isMenuOpen ? "show" : ""}`}>
               <li>
                 <Link className='dropdown-item' to='/admin/users'>
                   Users
@@ -136,16 +139,16 @@ const Navbar = () => {
         </Link>
 
         <button
-          className={`navbar-toggler ${isOpen ? "" : "collapsed"}`}
+          className={`navbar-toggler ${isMenuOpen ? "" : "collapsed"}`}
           type='button'
-          onClick={toggleMenu}
-          aria-expanded={isOpen}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-expanded={isMenuOpen}
           aria-label='Toggle navigation'
         >
           <span className='navbar-toggler-icon'></span>
         </button>
 
-        <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
+        <div className={`collapse navbar-collapse ${isMenuOpen ? "show" : ""}`}>
           <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>{getNavItems()}</ul>
 
           <div className='nav-buttons d-flex align-items-center'>
@@ -174,7 +177,7 @@ const Navbar = () => {
                   <div className='profile-dropdown'>
                     <button
                       className='profile-icon btn btn-link'
-                      onClick={toggleProfile}
+                      onClick={() => setIsProfileOpen(!isProfileOpen)}
                       aria-expanded={isProfileOpen}
                     >
                       <i className='bi bi-person-circle fs-4'></i>
@@ -200,9 +203,10 @@ const Navbar = () => {
                       <Link to='/profile/settings' className='dropdown-item'>
                         <i className='bi bi-gear me-2'></i>Settings
                       </Link>
-                      {user.role === "admin" && (
+                      {user.role === "ADMIN" && (
                         <Link to='/admin/settings' className='dropdown-item'>
-                          <i className='bi bi-shield-lock me-2'></i>Admin Settings
+                          <i className='bi bi-shield-lock me-2'></i>Admin
+                          Settings
                         </Link>
                       )}
                     </div>

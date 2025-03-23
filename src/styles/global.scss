@@ -2,6 +2,28 @@ body {
   background-color: #f8f9fa !important;
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  margin-top: 60px; // Adjust based on your navbar height
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .navbar {
   padding: 1rem 0;
   background-color: rgba(255, 255, 255, 0.98);
